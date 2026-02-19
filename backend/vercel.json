@@ -6,6 +6,7 @@
       "use": "@vercel/python"
     }
   ],
+  "buildCommand": "python nltk_setup.py",
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index.py" }
   ],

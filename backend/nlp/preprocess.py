@@ -5,17 +5,37 @@ Text preprocessing module for cleaning and preparing text for matching
 import re
 import nltk
 import string
+import os
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 
-# Download required NLTK data (first time only)
+# Set NLTK data path for production
+if os.environ.get('VERCEL_ENV'):
+    # In Vercel, use /tmp directory
+    nltk_data_dir = '/tmp/nltk_data'
+    nltk.data.path.append(nltk_data_dir)
+else:
+    # Local development
+    nltk_data_dir = os.path.expanduser('~/nltk_data')
+
+# Ensure NLTK data is available
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('wordnet')
-    nltk.download('punkt_tab')
+    print("⚠️ NLTK punkt not found, downloading...")
+    nltk.download('punkt', download_dir=nltk_data_dir)
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    print("⚠️ NLTK stopwords not found, downloading...")
+    nltk.download('stopwords', download_dir=nltk_data_dir)
+
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    print("⚠️ NLTK wordnet not found, downloading...")
+    nltk.download('wordnet', download_dir=nltk_data_dir)
 
 
 class TextPreprocessor:
