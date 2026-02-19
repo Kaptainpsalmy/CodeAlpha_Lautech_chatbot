@@ -6,8 +6,17 @@ import re
 import nltk
 import string
 import os
+import ssl
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+# Fix for SSL certificate issues
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 # Set NLTK data path for production
 if os.environ.get('VERCEL_ENV'):
@@ -18,26 +27,30 @@ else:
     # Local development
     nltk_data_dir = os.path.expanduser('~/nltk_data')
 
-# Ensure NLTK data is available
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    print("⚠️ NLTK punkt not found, downloading...")
-    nltk.download('punkt', download_dir=nltk_data_dir)
+# Download required NLTK data
+required_packages = [
+    'punkt',
+    'punkt_tab',
+    'stopwords',
+    'wordnet'
+]
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    print("⚠️ NLTK stopwords not found, downloading...")
-    nltk.download('stopwords', download_dir=nltk_data_dir)
+for package in required_packages:
+    try:
+        if package == 'punkt':
+            nltk.data.find('tokenizers/punkt')
+        elif package == 'punkt_tab':
+            nltk.data.find('tokenizers/punkt_tab')
+        elif package == 'stopwords':
+            nltk.data.find('corpora/stopwords')
+        elif package == 'wordnet':
+            nltk.data.find('corpora/wordnet')
+        print(f"✅ NLTK {package} found")
+    except LookupError:
+        print(f"⚠️ NLTK {package} not found, downloading...")
+        nltk.download(package, download_dir=nltk_data_dir, quiet=False)
 
-try:
-    nltk.data.find('corpora/wordnet')
-except LookupError:
-    print("⚠️ NLTK wordnet not found, downloading...")
-    nltk.download('wordnet', download_dir=nltk_data_dir)
-
-
+        
 class TextPreprocessor:
     def __init__(self, use_lemmatization=True, remove_stopwords=True):
         """
