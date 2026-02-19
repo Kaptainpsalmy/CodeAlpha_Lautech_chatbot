@@ -212,10 +212,11 @@ def chat():
 def get_history(session_id):
     """Get chat history for a session"""
     try:
+        from database.config import get_db_connection, IN_PRODUCTION
+
         conn = get_db_connection()
 
         if IN_PRODUCTION:
-            # PostgreSQL version
             from psycopg2.extras import RealDictCursor
             cur = conn.cursor(cursor_factory=RealDictCursor)
             cur.execute(
@@ -224,7 +225,6 @@ def get_history(session_id):
             )
             history = cur.fetchall()
         else:
-            # SQLite version
             cur = conn.cursor()
             cur.execute(
                 "SELECT * FROM chat_history WHERE session_id = ? ORDER BY timestamp DESC LIMIT 50",
@@ -248,10 +248,11 @@ def get_history(session_id):
 def get_suggestions():
     """Get popular questions for suggestions"""
     try:
+        from database.config import get_db_connection, IN_PRODUCTION
+
         conn = get_db_connection()
 
         if IN_PRODUCTION:
-            # PostgreSQL version
             from psycopg2.extras import RealDictCursor
             cur = conn.cursor(cursor_factory=RealDictCursor)
 
@@ -276,12 +277,9 @@ def get_suggestions():
                 all_suggestions = [s['user_message'] for s in suggestions] + [f['question'] for f in faqs]
             else:
                 all_suggestions = [s['user_message'] for s in suggestions]
-
         else:
             # SQLite version
             cur = conn.cursor()
-
-            # Get most frequently asked questions
             cur.execute("""
                 SELECT user_message, COUNT(*) as count 
                 FROM chat_history 
@@ -291,7 +289,6 @@ def get_suggestions():
             """)
             suggestions = cur.fetchall()
 
-            # If not enough history, get random FAQs
             if len(suggestions) < 6:
                 cur.execute(
                     "SELECT question FROM faqs ORDER BY RANDOM() LIMIT ?",

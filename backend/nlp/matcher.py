@@ -227,10 +227,22 @@ class FAQMatcher:
     def load_faqs(self):
         """Load FAQs from database and build vectors"""
         try:
+            from database.config import get_db_connection, IN_PRODUCTION
+
             conn = get_db_connection()
-            faqs = conn.execute(
-                "SELECT id, question, answer, category FROM faqs"
-            ).fetchall()
+
+            if IN_PRODUCTION:
+                # PostgreSQL version - MUST use cursor
+                from psycopg2.extras import RealDictCursor
+                cur = conn.cursor(cursor_factory=RealDictCursor)
+                cur.execute("SELECT id, question, answer, category FROM faqs")
+                faqs = cur.fetchall()
+            else:
+                # SQLite version - can use connection.execute directly
+                cur = conn.cursor()
+                cur.execute("SELECT id, question, answer, category FROM faqs")
+                faqs = cur.fetchall()
+
             conn.close()
 
             if not faqs:
@@ -253,9 +265,10 @@ class FAQMatcher:
 
         except Exception as e:
             print(f"🔥 Error loading FAQs: {e}")
+            import traceback
+            traceback.print_exc()
             self.faqs = []
             self.is_fitted = False
-
     def refresh_if_needed(self):
         """Refresh FAQ vectors if database has changed"""
         self.load_faqs()
