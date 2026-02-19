@@ -2,25 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>LAUTECH Smart Assistant</title>
-
-    <!-- Font Awesome for icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAUTECH Chatbot - Test</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .test-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #00A3FF;
+            color: #121212;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
+    <div class="test-badge">
+        <i class="fas fa-flask"></i> Test Mode
+    </div>
+
+    <!-- Include the same HTML structure from index.html -->
     <div class="app-container">
-        <!-- HEADER SECTION -->
+        <!-- HEADER -->
         <header class="chat-header">
             <div class="header-content">
                 <div class="logo-area">
-                    <!-- LAUTECH Logo Placeholder -->
                     <div class="logo-placeholder">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
@@ -30,10 +42,10 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="icon-btn" id="themeToggle" title="Toggle theme">
+                    <button class="icon-btn" id="themeToggle">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <button class="icon-btn" id="clearChat" title="Clear chat">
+                    <button class="icon-btn" id="clearChat">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -42,7 +54,6 @@
 
         <!-- MAIN CHAT AREA -->
         <main class="chat-main">
-            <!-- Welcome Section (Shown when no messages) -->
             <div class="welcome-section" id="welcomeSection">
                 <div class="welcome-icon">
                     <i class="fas fa-robot"></i>
@@ -50,22 +61,27 @@
                 <h2>Ask Me Anything About LAUTECH</h2>
                 <p class="welcome-subtitle">Admissions • School Fees • Departments • Hostels • Campus Life</p>
 
-                <!-- SUGGESTED QUESTIONS SECTION - FIXED: Added id="questionChips" -->
-                <div class="suggested-questions" id="suggestedQuestions">
+                <div class="suggested-questions">
                     <h3>Popular Questions</h3>
-                    <div class="question-chips" id="questionChips">
-                        <!-- Chips will be dynamically loaded from API -->
-                        <!-- Static chips removed - now loaded dynamically -->
+                    <div class="question-chips">
+                        <button class="chip" data-question="What is the cut-off mark for Medicine?">
+                            <i class="fas fa-question-circle"></i>
+                            What is the cut-off mark for Medicine?
+                        </button>
+                        <button class="chip" data-question="How much are school fees?">
+                            <i class="fas fa-money-bill-wave"></i>
+                            How much are school fees?
+                        </button>
+                        <button class="chip" data-question="Where is the best area to live?">
+                            <i class="fas fa-home"></i>
+                            Where is the best area to live?
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- CHAT MESSAGES CONTAINER -->
-            <div class="chat-messages" id="chatMessages">
-                <!-- Messages will be dynamically added here -->
-            </div>
+            <div class="chat-messages" id="chatMessages"></div>
 
-            <!-- TYPING INDICATOR -->
             <div class="typing-indicator" id="typingIndicator">
                 <div class="typing-dot"></div>
                 <div class="typing-dot"></div>
@@ -80,24 +96,19 @@
                 <div class="input-wrapper">
                     <textarea
                         id="userInput"
-                        placeholder="Type your question… e.g., What is the cut-off mark for 2026?"
+                        placeholder="Type your question…"
                         rows="1"
                         maxlength="500"
                     ></textarea>
-
-                    <!-- Microphone button (future feature) -->
-                    <button class="input-action-btn" id="voiceInputBtn" title="Voice input">
+                    <button class="input-action-btn" id="voiceInputBtn">
                         <i class="fas fa-microphone"></i>
                     </button>
                 </div>
-
                 <button class="send-btn" id="sendButton" disabled>
                     <i class="fas fa-paper-plane"></i>
                     <span class="send-text">Send</span>
                 </button>
             </div>
-
-            <!-- FOOTER TEXT -->
             <div class="footer-credit">
                 <p>Powered by Samuel</p>
                 <span class="status-dot"></span>
@@ -106,12 +117,9 @@
         </footer>
     </div>
 
-    <!-- TOAST NOTIFICATION CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- JavaScript Files -->
-    <!-- JavaScript Files -->
-    <script src="js/admin.js"></script>
+    <!-- Scripts -->
     <script src="js/utils.js"></script>
     <script src="js/chat.js"></script>
 </body>

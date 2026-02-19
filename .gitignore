@@ -1,7 +1,26 @@
-venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Database
+*.db
+*.sqlite3
+data/*.db
+
+# Environment
 .env
+.env.local
+.env.*.local
+
+# Vercel
 .vercel
 .vscode/
-data/unknown.json
+
+# Logs
+*.log

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAUTECH Smart Assistant - Admin</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js for statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- LOGIN SECTION (Visible by default, hidden after login) -->
+        <div class="login-section" id="loginSection">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2>Admin Dashboard</h2>
+                    <p>LAUTECH Smart Assistant</p>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">
+                            <i class="fas fa-user"></i>
+                            Username
+                        </label>
+                        <input type="text" id="username" placeholder="Enter username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password
+                        </label>
+                        <input type="password" id="password" placeholder="Enter password" required>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login to Dashboard
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Default credentials: admin / admin123</p>
+                    <p class="warning">(Change in production!)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD SECTION (Hidden by default, shown after login) -->
+        <div class="dashboard-section" id="dashboardSection" style="display: none;">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <i class="fas fa-robot"></i>
+                    <h3>LAUTECH Admin</h3>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active" data-tab="overview">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#" class="nav-item" data-tab="unknown">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Unknown Questions</span>
+                        <span class="badge" id="unknownBadge">0</span>
+                    </a>
+                    <a href="#" class="nav-item" data-tab="faqs">
+                        <i class="fas fa-database"></i>
+                        <span>Manage FAQs</span>
+                    </a>
+                    <a href="#" class="nav-item" data-tab="analytics">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="#" class="nav-item" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="admin-main">
+                <!-- OVERVIEW TAB -->
+                <div class="tab-content active" id="overviewTab">
+                    <div class="content-header">
+                        <h2>Dashboard Overview</h2>
+                        <p>Welcome back, Admin</p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Total FAQs</span>
+                                <span class="stat-value" id="totalFaqs">0</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon yellow">
+                                <i class="fas fa-question"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Unknown Questions</span>
+                                <span class="stat-value" id="unknownCount">0</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Answered</span>
+                                <span class="stat-value" id="answeredCount">0</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Total Chats</span>
+                                <span class="stat-value" id="totalChats">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <h3>Questions by Category</h3>
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Activity (Last 7 Days)</h3>
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Unknown Questions Preview -->
+                    <div class="recent-card">
+                        <div class="card-header">
+                            <h3>Recent Unknown Questions</h3>
+                            <a href="#" class="view-all" data-tab="unknown">View All <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="preview-table" id="recentUnknownTable">
+                                <thead>
+                                    <tr>
+                                        <th>Question</th>
+                                        <th>Asked</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3" class="loading-row">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UNKNOWN QUESTIONS TAB -->
+                <div class="tab-content" id="unknownTab">
+                    <div class="content-header">
+                        <h2>Unknown Questions</h2>
+                        <p>Questions the bot couldn't answer</p>
+                    </div>
+
+                    <div class="filter-bar">
+                        <div class="filter-tabs">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="unanswered">Unanswered</button>
+                            <button class="filter-btn" data-filter="answered">Answered</button>
+                        </div>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search questions..." id="unknownSearch">
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table" id="unknownTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Question</th>
+                                        <th>Asked On</th>
+                                        <th>Session</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="loading-row">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="table-footer">
+                            <div class="pagination">
+                                <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                                <span class="page-info">Page 1 of 1</span>
+                                <button class="page-btn" disabled><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ MANAGEMENT TAB -->
+                <div class="tab-content" id="faqsTab">
+                    <div class="content-header">
+                        <h2>Manage FAQs</h2>
+                        <button class="add-faq-btn" id="addFaqBtn">
+                            <i class="fas fa-plus"></i>
+                            Add New FAQ
+                        </button>
+                    </div>
+
+                    <!-- Add/Edit FAQ Modal (Hidden by default) -->
+                    <div class="modal" id="faqModal" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="modalTitle">Add New FAQ</h3>
+                                <button class="close-modal"><i class="fas fa-times"></i></button>
+                            </div>
+                            <form id="faqForm">
+                                <input type="hidden" id="faqId">
+
+                                <div class="form-group">
+                                    <label for="faqQuestion">Question</label>
+                                    <textarea id="faqQuestion" rows="2" required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="faqAnswer">Answer</label>
+                                    <textarea id="faqAnswer" rows="4" required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="faqCategory">Category</label>
+                                    <select id="faqCategory" required>
+                                        <option value="">Select Category</option>
+                                        <option value="General">General</option>
+                                        <option value="Admissions">Admissions</option>
+                                        <option value="Academics">Academics</option>
+                                        <option value="Fees">Fees</option>
+                                        <option value="Accommodation">Accommodation</option>
+                                        <option value="Student Affairs">Student Affairs</option>
+                                        <option value="Food">Food</option>
+                                        <option value="Security">Security</option>
+                                        <option value="Amenities">Amenities</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="Technical">Technical</option>
+                                        <option value="Current Events">Current Events</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="cancel-btn">Cancel</button>
+                                    <button type="submit" class="save-btn">Save FAQ</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- FAQ List -->
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search FAQs..." id="faqSearch">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-responsive">
+                            <table class="data-table" id="faqsTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Question</th>
+                                        <th>Answer Preview</th>
+                                        <th>Category</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="loading-row">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="table-footer">
+                            <div class="pagination">
+                                <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                                <span class="page-info">Page 1 of 1</span>
+                                <button class="page-btn" disabled><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ANALYTICS TAB -->
+                <div class="tab-content" id="analyticsTab">
+                    <div class="content-header">
+                        <h2>Analytics</h2>
+                        <p>Chatbot performance metrics</p>
+                    </div>
+
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>Top Questions</h3>
+                            <div class="top-questions-list" id="topQuestions">
+                                <div class="loading-spinner"></div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Performance Metrics</h3>
+                            <div class="metrics-list">
+                                <div class="metric-item">
+                                    <span class="metric-label">Response Rate:</span>
+                                    <span class="metric-value" id="responseRate">0%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Unknown Rate:</span>
+                                    <span class="metric-value" id="unknownRate">0%</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Avg Response Time:</span>
+                                    <span class="metric-value" id="avgResponseTime">0ms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS TAB -->
+                <div class="tab-content" id="settingsTab">
+                    <div class="content-header">
+                        <h2>Settings</h2>
+                        <p>Configure your chatbot</p>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Bot Settings</h3>
+
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" id="enableSuggestions" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <strong>Enable Suggested Questions</strong>
+                                <p>Show suggested questions to users</p>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" id="enableTTS" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <strong>Enable Text-to-Speech</strong>
+                                <p>Allow users to hear responses</p>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <label for="similarityThreshold">Similarity Threshold</label>
+                            <input type="range" id="similarityThreshold" min="0.5" max="0.9" step="0.05" value="0.7">
+                            <span id="thresholdValue">0.7</span>
+                            <p class="setting-note">Higher = more strict matching</p>
+                        </div>
+
+                        <h3 style="margin-top: 30px;">Admin Settings</h3>
+
+                        <div class="setting-item">
+                            <button class="danger-btn" id="changePasswordBtn">
+                                <i class="fas fa-key"></i>
+                                Change Password
+                            </button>
+                        </div>
+
+                        <div class="setting-item">
+                            <button class="danger-btn" id="exportDataBtn">
+                                <i class="fas fa-download"></i>
+                                Export All Data
+                            </button>
+                        </div>
+
+                        <div class="setting-item">
+                            <button class="danger-btn" id="clearHistoryBtn">
+                                <i class="fas fa-trash"></i>
+                                Clear Chat History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ANSWER MODAL (For answering unknown questions) -->
+    <div class="modal" id="answerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Answer Unknown Question</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="answerForm">
+                <input type="hidden" id="unknownQuestionId">
+
+                <div class="form-group">
+                    <label>Question</label>
+                    <div class="question-preview" id="unknownQuestionText"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="answerText">Your Answer</label>
+                    <textarea id="answerText" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="answerCategory">Category</label>
+                    <select id="answerCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="General">General</option>
+                        <option value="Admissions">Admissions</option>
+                        <option value="Academics">Academics</option>
+                        <option value="Fees">Fees</option>
+                        <option value="Accommodation">Accommodation</option>
+                        <option value="Student Affairs">Student Affairs</option>
+                        <option value="Food">Food</option>
+                        <option value="Security">Security</option>
+                        <option value="Amenities">Amenities</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Current Events">Current Events</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Add to FAQs</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div class="modal" id="confirmModal" style="display: none;">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>Confirm Action</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- JavaScript Files -->
+    <script src="js/utils.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

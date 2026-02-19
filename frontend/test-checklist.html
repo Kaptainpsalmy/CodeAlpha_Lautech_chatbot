@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAUTECH Chatbot - Test Checklist</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #121212;
+            color: #EAEAEA;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #00A3FF;
+            border-bottom: 2px solid #242424;
+            padding-bottom: 10px;
+        }
+
+        .test-section {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00A3FF;
+        }
+
+        .test-section h2 {
+            margin-top: 0;
+            color: #EAEAEA;
+        }
+
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #242424;
+            border-radius: 8px;
+        }
+
+        .test-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: #00A3FF;
+        }
+
+        .test-item label {
+            flex: 1;
+            color: #EAEAEA;
+        }
+
+        .test-item .note {
+            color: #B1B1B1;
+            font-size: 0.9rem;
+        }
+
+        .pass {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .fail {
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        .device-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+
+        .desktop { background: #005F85; }
+        .mobile { background: #8B4513; }
+        .tablet { background: #4B0082; }
+
+        .button {
+            background: #00A3FF;
+            color: #121212;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            background: #0080cc;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #242424;
+            border-radius: 16px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #00A3FF;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 LAUTECH Chatbot - Testing Checklist</h1>
+
+    <div class="test-section">
+        <h2>📱 Device Testing</h2>
+        <div class="test-item">
+            <input type="checkbox" id="device-desktop">
+            <label>Desktop / Laptop <span class="device-badge desktop">Desktop</span></label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="device-mobile">
+            <label>Mobile Phone <span class="device-badge mobile">Mobile</span></label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="device-tablet">
+            <label>Tablet <span class="device-badge tablet">Tablet</span></label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🌐 Browser Testing</h2>
+        <div class="test-item">
+            <input type="checkbox" id="browser-chrome">
+            <label>Google Chrome</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="browser-firefox">
+            <label>Mozilla Firefox</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="browser-edge">
+            <label>Microsoft Edge</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="browser-safari">
+            <label>Safari (if available)</label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>💬 Chat Functionality</h2>
+        <div class="test-item">
+            <input type="checkbox" id="chat-send">
+            <label>Send message (Enter key works)</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="chat-shift-enter">
+            <label>Shift+Enter creates new line</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="chat-typing">
+            <label>Typing indicator shows when waiting for response</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="chat-scroll">
+            <label>Auto-scroll to new messages</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="chat-copy">
+            <label>Copy button works and shows feedback</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="chat-tts">
+            <label>Text-to-speech button works</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="chat-clear">
+            <label>Clear chat button works</label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Question Testing</h2>
+        <div class="test-item">
+            <input type="checkbox" id="q-normal">
+            <label>Normal question: "What is cut off mark for medicine?"</label>
+            <span class="note">(Should match)</span>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="q-typo">
+            <label>Typo: "medcine"</label>
+            <span class="note">(Should handle typo)</span>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="q-short">
+            <label>Short: "fees"</label>
+            <span class="note">(Should match)</span>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="q-long">
+            <label>Very long question (1000 chars)</label>
+            <span class="note">(Should handle)</span>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="q-special">
+            <label>Special characters: "!@#$%^&*()"</label>
+            <span class="note">(Should not crash)</span>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="q-empty">
+            <label>Empty message</label>
+            <span class="note">(Send button disabled)</span>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>👋 Greeting Testing</h2>
+        <div class="test-item">
+            <input type="checkbox" id="greet-hi">
+            <label>"hi"</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="greet-hello">
+            <label>"hello"</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="greet-how">
+            <label>"how are you"</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="greet-thanks">
+            <label>"thank you"</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="greet-bye">
+            <label>"bye"</label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>💡 Suggestions</h2>
+        <div class="test-item">
+            <input type="checkbox" id="suggest-load">
+            <label>Suggestions load on page start</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="suggest-click">
+            <label>Clicking suggestion sends question</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="suggest-update">
+            <label>Suggestions update based on context</label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📱 Responsive Design</h2>
+        <div class="test-item">
+            <input type="checkbox" id="resp-mobile">
+            <label>Looks good on mobile (320px)</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="resp-tablet">
+            <label>Looks good on tablet (768px)</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="resp-desktop">
+            <label>Looks good on desktop (1200px+)</label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>⚠️ Error Handling</h2>
+        <div class="test-item">
+            <input type="checkbox" id="error-server">
+            <label>Turn off server - shows error message</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="error-toast">
+            <label>Error toast notifications appear</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="error-reconnect">
+            <label>Reconnects when server comes back</label>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>💾 Chat History</h2>
+        <div class="test-item">
+            <input type="checkbox" id="history-save">
+            <label>Messages saved after refresh</label>
+        </div>
+        <div class="test-item">
+            <input type="checkbox" id="history-clear">
+            <label>Clear history works</label>
+        </div>
+    </div>
+
+    <button class="button" onclick="calculateScore()">📊 Calculate Test Score</button>
+
+    <div class="results" id="results">
+        <h3>Test Results</h3>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p id="scoreText"></p>
+        <p id="recommendation"></p>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const total = checkboxes.length;
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const percentage = (checked / total * 100).toFixed(1);
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('progressFill').style.width = percentage + '%';
+
+            let recommendation = '';
+            if (percentage >= 90) {
+                recommendation = '🎉 Excellent! Ready for deployment!';
+            } else if (percentage >= 70) {
+                recommendation = '👍 Good, but fix remaining issues before deployment.';
+            } else {
+                recommendation = '⚠️ Need more testing. Review failed tests.';
+            }
+
+            document.getElementById('scoreText').innerHTML =
+                `✅ Passed: ${checked}/${total} tests (${percentage}%)`;
+            document.getElementById('recommendation').innerHTML = recommendation;
+
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

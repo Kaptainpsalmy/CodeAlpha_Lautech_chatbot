@@ -1,0 +1,287 @@
+[
+  {
+    "question": "What is the full meaning of LAUTECH?",
+    "answer": "LAUTECH stands for Ladoke Akintola University of Technology. It is a public research university with a focus on technology and applied sciences.",
+    "category": "General"
+  },
+  {
+    "question": "Where is LAUTECH located?",
+    "answer": "The university is located in Ogbomoso, Oyo State, Nigeria, along the Ogbomoso-Ilorin Road.",
+    "category": "General"
+  },
+  {
+    "question": "Is LAUTECH a federal or state university?",
+    "answer": "LAUTECH is a state university, owned and funded by the Oyo State Government.",
+    "category": "General"
+  },
+  {
+    "question": "Who is the current Vice-Chancellor (VC) of LAUTECH?",
+    "answer": "The current Vice-Chancellor is Professor Razaq Olatunde Rom Kalilu (Prof. R.O. Kalilu), who was appointed in June 2024.",
+    "category": "General"
+  },
+  {
+    "question": "What are the basic admission requirements for UTME candidates?",
+    "answer": "O'Level Results: Minimum of five (5) credit passes in SSCE/GCE/NECO/NABTEB, including English Language, Mathematics, and other subjects relevant to your chosen course (e.g., Physics, Chemistry, Biology for science courses). UTME Score: A minimum score of 170 in the 2025/2026 UTME. JAMB Choice: LAUTECH accepts only first-choice candidates. You must select LAUTECH as your first choice on the JAMB portal.",
+    "category": "Admissions"
+  },
+  {
+    "question": "What is the minimum age for admission?",
+    "answer": "Candidates must generally meet the JAMB requirement of being at least 16 years old by October 1st of the admission year.",
+    "category": "Admissions"
+  },
+  {
+    "question": "Does LAUTECH accept second-choice candidates?",
+    "answer": "No, LAUTECH only considers candidates who chose it as their first choice in the JAMB registration.",
+    "category": "Admissions"
+  },
+  {
+    "question": "What is the cut-off mark for my course?",
+    "answer": "While the general UTME cut-off is 170, the final cut-off (aggregate score) varies by department. Competitive courses like Medicine and Accounting require a higher aggregate score. Check the LAUTECH admission portal (apply.lautech.edu.ng) for departmental cut-off marks for the 2025/2026 session.",
+    "category": "Admissions"
+  },
+  {
+    "question": "Is there a Post-UTME exam?",
+    "answer": "LAUTECH conducts a Post-UTME screening exercise. This is primarily an online registration and verification process. Candidates apply via the admission portal and pay a non-refundable fee (e.g., ₦5,000 total for the 2025/2026 session). It may not always include a separate computer-based test, so check the portal for specific instructions for your batch.",
+    "category": "Admissions"
+  },
+  {
+    "question": "How do I apply for the Post-UTME screening?",
+    "answer": "Eligible candidates should visit the official LAUTECH admission portal (apply.lautech.edu.ng), create an account, and follow the instructions to complete the application and make the required payment (typically via InterSwitch-enabled debit card).",
+    "category": "Admissions"
+  },
+  {
+    "question": "What are the subject combinations and O'Level requirements for competitive courses like Medicine?",
+    "answer": "For Medicine, you need UTME subjects: English, Physics, Chemistry, and Biology. You must also have five O'Level credits, including English, Mathematics, Physics, Chemistry, and Biology. It is crucial to upload your O'Level results to the JAMB Central Admission Processing System (CAPS) before the deadline.",
+    "category": "Admissions"
+  },
+  {
+    "question": "Can I change my course after applying?",
+    "answer": "Yes, course changes are possible via the admission portal for a fee (e.g., ₦5,000), subject to the availability of spaces in the desired department.",
+    "category": "Admissions"
+  },
+  {
+    "question": "How do I check my admission status?",
+    "answer": "You can check your admission status on both the LAUTECH admission portal (apply.lautech.edu.ng) using your JAMB registration number, and on the JAMB CAPS portal. Admission lists are released in batches.",
+    "category": "Admissions"
+  },
+  {
+    "question": "When will the 2025/2026 admission list be fully out?",
+    "answer": "Admission lists are released in batches on JAMB CAPS and the LAUTECH portal. Some matriculations took place in January 2026. It is important to check regularly and pay your acceptance and school fees promptly upon admission to confirm your place.",
+    "category": "Admissions"
+  },
+  {
+    "question": "What documents are needed for the verification exercise after admission?",
+    "answer": "Newly admitted students are required to bring the following original documents for physical verification at 'THE HALL' or a designated venue on campus: O'Level results (uploaded and verified on JAMB CAPS), JAMB admission letter, Acceptance fee receipt, Proof of payment of other charges.",
+    "category": "Admissions"
+  },
+  {
+    "question": "What if there is a server error on the portal after JAMB has confirmed my admission?",
+    "answer": "Portal errors during high-traffic periods are common. If JAMB CAPS shows your admission, the university portal may simply be slow. You can try waiting, refreshing the page, or contacting the ICT support or admissions office for assistance. The university often reopens the portal window to resolve such issues.",
+    "category": "Admissions"
+  },
+  {
+    "question": "Are there second-round or supplementary Post-UTME opportunities?",
+    "answer": "Yes, in some admission sessions, LAUTECH conducts a second round of Post-UTME screening (e.g., 2nd round PUME) for candidates who may have missed the first. Monitor the admission portal for such announcements.",
+    "category": "Admissions"
+  },
+  {
+    "question": "How do I correct a mistake in my registration details (e.g., wrong course or personal data)?",
+    "answer": "Minor errors can often be corrected by contacting the admissions office via the portal or email. For course changes, there is a specific paid process on the portal if spaces are available.",
+    "category": "Admissions"
+  },
+  {
+    "question": "What degrees are awarded (e.g., BTech vs BSc)?",
+    "answer": "Most students, with the exception of those in Medicine and Nursing, are awarded a Bachelor of Technology (BTech) degree, even in fields like Physiology.",
+    "category": "Academics"
+  },
+  {
+    "question": "Why are some programs, like Medicine, so long?",
+    "answer": "The duration is due to the extensive curriculum, including lengthy clinical years. For instance, the 400-level alone can span two years because of an extended academic calendar and specific program requirements.",
+    "category": "Academics"
+  },
+  {
+    "question": "What is the current status of the Anatomy & Physiology relocation to the Faculty of Pure and Applied Sciences (PASSA)?",
+    "answer": "This is an ongoing issue. As of February 2026, there have been significant protests from students against the university Senate's decision to relocate these departments from Basic Medical Sciences to PASSA. Students are concerned about the impact on their degree value, professional certification, clinical placements, and career recognition.",
+    "category": "Academics"
+  },
+  {
+    "question": "Will the faculty change affect my degree (e.g., BSc vs. BTech or medical recognition)?",
+    "answer": "This is a major concern for students in the affected departments. They fear their certificates will be seen as 'science' degrees rather than 'medical' degrees, potentially jeopardizing their clinical exposure, licensure, and job prospects in the medical field.",
+    "category": "Academics"
+  },
+  {
+    "question": "Are students allowed to drive cars on campus?",
+    "answer": "No, LAUTECH has a policy that bans students from bringing cars onto campus.",
+    "category": "Student Affairs"
+  },
+  {
+    "question": "What is the procedure for library registration?",
+    "answer": "New students (Direct Entry and 100L) are required to register at the university library. Extensions for registration are sometimes granted. Failure to register may prevent you from using library resources.",
+    "category": "Student Affairs"
+  },
+  {
+    "question": "How can I check my results and calculate my CGPA?",
+    "answer": "Check Results: Log in to the student portal (eportal.lautech.edu.ng) and navigate to the 'Results' or 'Academic Records' section. Calculate CGPA: CGPA is calculated by dividing the total grade points earned by the total credit units attempted. LAUTECH uses a standard 5-point grading scale (A=5, B=4, C=3, D=2, E=1, F=0).",
+    "category": "Academics"
+  },
+  {
+    "question": "How do I handle discrepancies in my results (e.g., script score vs. final grade)?",
+    "answer": "You should verify your results through the ICT unit using your matriculation number. There is usually an appeal process to address such issues, though it can be time-consuming.",
+    "category": "Academics"
+  },
+  {
+    "question": "How do I pay my school fees?",
+    "answer": "School fees are paid online via the official payments portal at gateway.lautech.edu.ng. You will need your student ID and password to log in and pay using an InterSwitch-enabled debit card.",
+    "category": "Fees"
+  },
+  {
+    "question": "Can I pay my school fees in installments?",
+    "answer": "Yes, recent updates indicate that both fresh and returning students have the option to pay either in part or in full during the registration period on the portal.",
+    "category": "Fees"
+  },
+  {
+    "question": "How much are the school fees?",
+    "answer": "Fees vary based on indigene/non-indigene status, faculty, and level of study. For the 2024/2025 session, returning indigenes paid around ₦168,000 and non-indigenes around ₦204,000, with freshers paying higher. A 25% reduction was announced by the state governor. Always check the portal for the exact fees for your specific session and category.",
+    "category": "Fees"
+  },
+  {
+    "question": "What should I do if I forget my portal password?",
+    "answer": "On the login page (eportal.lautech.edu.ng), click the 'Forgot Password' link and follow the instructions to reset it using your registered email address or matriculation number.",
+    "category": "Technical"
+  },
+  {
+    "question": "How do I register for my courses?",
+    "answer": "After logging into the student portal, go to the course registration section during the specified window. Select the approved courses for your level, ensure all fees are paid, then submit and print your registration form.",
+    "category": "Academics"
+  },
+  {
+    "question": "Does the school provide hostel accommodation?",
+    "answer": "No — LAUTECH currently does not offer official school-owned hostels. Students live in off-campus lodges.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "How can I get my school ID card?",
+    "answer": "After completing your clearance and paying your fees, you can apply for your ID card through the student portal or at the Student Affairs office. This may involve biometric data capture.",
+    "category": "Student Affairs"
+  },
+  {
+    "question": "Has the NELFUND student loan affected LAUTECH students?",
+    "answer": "Some disbursements from the Nigeria Education Loan Fund (NELFUND) are ongoing, but many LAUTECH students report delays in approval and payment. Students are advised to check their dashboard on the NELFUND portal (nelf.gov.ng) for the status of their applications.",
+    "category": "Fees"
+  },
+  {
+    "question": "Why are students protesting in February 2026?",
+    "answer": "Protests in February 2026 are primarily against the Senate's decision to relocate the Physiology and Anatomy departments to the Faculty of Pure and Applied Sciences (PASSA). Students argue the decision was made without adequate consultation and will negatively impact their education and future careers.",
+    "category": "Current Events"
+  },
+  {
+    "question": "What is the current academic calendar status?",
+    "answer": "For the most up-to-date academic calendar, including rain and harmattan semester dates, students should always refer to the official university website (lautech.edu.ng) or check official bulletins.",
+    "category": "Academics"
+  },
+  {
+    "question": "Which restaurant sells the best food around LAUTECH?",
+    "answer": "Item 7 is the most recommended, followed by Alata, The Assembly, Perozonia, Wa We Wo, and Alice Place.",
+    "category": "Food"
+  },
+  {
+    "question": "Which area around LAUTECH has the most stable electricity?",
+    "answer": "General Area and Stadium Area have the most stable electricity, followed by Kuye and Under G. Adenike fluctuates.",
+    "category": "Amenities"
+  },
+  {
+    "question": "Which areas around LAUTECH are the safest to live in?",
+    "answer": "Stadium Area is the most secure (though slightly far from campus), followed by Adenike, Yoaco, and Under G.",
+    "category": "Security"
+  },
+  {
+    "question": "Are there cultists in LAUTECH?",
+    "answer": "Yes — like most Nigerian universities, cases exist, but security presence is strong and activities are controlled.",
+    "category": "Security"
+  },
+  {
+    "question": "What is the best place to read in LAUTECH?",
+    "answer": "The Library is the main reading spot, most reliable. Faculty reading rooms and lecture halls (when open) and relaxation centers with quiet environment are also options.",
+    "category": "Academics"
+  },
+  {
+    "question": "Which area is closest to the school gate?",
+    "answer": "Under G is the closest area to the school gate.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "Which area has the cheapest lodges around LAUTECH?",
+    "answer": "Yoaco has the cheapest lodges.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "Which area has the most expensive lodges?",
+    "answer": "Stadium and General Area have the most expensive lodges.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "Which area has the cleanest environment?",
+    "answer": "Stadium Area has the cleanest environment.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "What is the average transport fare from major areas to LAUTECH?",
+    "answer": "From Under G: ₦100, Kuye: ₦100, General Area: ₦100, Stadium: ₦150–₦200.",
+    "category": "Transportation"
+  },
+  {
+    "question": "Are bikes allowed on campus?",
+    "answer": "No — bikes do not enter the main campus.",
+    "category": "Transportation"
+  },
+  {
+    "question": "Which area has the best water supply?",
+    "answer": "General Area and Stadium have the best water supply.",
+    "category": "Amenities"
+  },
+  {
+    "question": "Are there 24/7 reading spots outside school?",
+    "answer": "Yes — some cafes and centers around Under G and General Area offer 24/7 reading spots.",
+    "category": "Academics"
+  },
+  {
+    "question": "Which area is best for fast internet connections?",
+    "answer": "General Area has the best internet connections.",
+    "category": "Amenities"
+  },
+  {
+    "question": "Where can I get affordable food around LAUTECH?",
+    "answer": "Alata and Wa We Wo offer affordable food options.",
+    "category": "Food"
+  },
+  {
+    "question": "Where do students hang out the most?",
+    "answer": "Under G and Stadium are the most popular hangout spots.",
+    "category": "Social"
+  },
+  {
+    "question": "Where can I get the best shawarma around LAUTECH?",
+    "answer": "The Assembly is known for the best shawarma.",
+    "category": "Food"
+  },
+  {
+    "question": "Which area is the quietest for academic-focused students?",
+    "answer": "Stadium Area is the quietest for academic-focused students.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "Which area is the noisiest?",
+    "answer": "Under G is the noisiest area.",
+    "category": "Accommodation"
+  },
+  {
+    "question": "Where can I buy groceries around LAUTECH?",
+    "answer": "Mini-marts in Under G, Kuye, and General Area sell groceries.",
+    "category": "Shopping"
+  },
+  {
+    "question": "Where can I repair my laptop or phone?",
+    "answer": "Contact 09039295254 for laptop and phone repairs.",
+    "category": "Services"
+  }
+]
