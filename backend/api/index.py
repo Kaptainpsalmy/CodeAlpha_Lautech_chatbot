@@ -12,20 +12,25 @@ def create_app():
     app = Flask(__name__)
 
     # Enable CORS
-    CORS(app, origins=["*"])  # In production, restrict this to your domain
+    CORS(app, origins=["*"])
 
     # Configure app
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'production-key-change-this')
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
     app.config['JSON_SORT_KEYS'] = False
 
     # Import and register blueprints
-    from api.chat import chat_bp
-    from api.admin import admin_bp
-    from api.unknown import unknown_bp
+    try:
+        from api.chat import chat_bp
+        from api.admin import admin_bp
+        from api.unknown import unknown_bp
 
-    app.register_blueprint(chat_bp, url_prefix='/api')
-    app.register_blueprint(admin_bp, url_prefix='/api/admin')
-    app.register_blueprint(unknown_bp, url_prefix='/api')
+        app.register_blueprint(chat_bp, url_prefix='/api')
+        app.register_blueprint(admin_bp, url_prefix='/api/admin')
+        app.register_blueprint(unknown_bp, url_prefix='/api')
+        print("✅ Blueprints registered successfully")
+    except Exception as e:
+        print(f"❌ Error registering blueprints: {e}")
+        raise
 
     @app.route('/')
     def home():
@@ -47,6 +52,7 @@ def create_app():
 app = create_app()
 
 
-# Vercel serverless handler
+# Vercel serverless handler - SIMPLIFIED
 def handler(request):
+    """Simple handler for Vercel"""
     return app(request)
