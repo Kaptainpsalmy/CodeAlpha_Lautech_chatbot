@@ -7,14 +7,19 @@ from datetime import datetime
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import database modules
-from database.config import get_db_connection, add_unknown_question, add_chat_history
+# Import database modules - ADD THE NEW FUNCTIONS
+from database.config import (
+    get_db_connection,
+    add_unknown_question,
+    add_chat_history,
+    execute_query,  # NEW: For SELECT queries that return multiple rows
+    execute_query_one,  # NEW: For SELECT queries that return one row
+    IN_PRODUCTION  # NEW: To check environment
+)
 from database.models import FAQ
 
-# Import NLP modules (we'll build these in Stage 7)
-# For now, we'll use a simple matcher
 # Import NLP modules
-from nlp.matcher import matcher  # Import the singleton instance
+from nlp.matcher import matcher, handle_greetings, handle_common_questions
 
 chat_bp = Blueprint('chat', __name__)
 
@@ -40,8 +45,6 @@ def chat():
         print(f"\n📝 Received: '{question}' from session: {session_id}")
 
         # ===== STEP 1: Check for greetings first =====
-        from nlp.matcher import handle_greetings, handle_common_questions
-
         greeting_response = handle_greetings(question)
         if greeting_response:
             print(f"👋 Greeting detected: {greeting_response['match_type']}")
@@ -95,10 +98,7 @@ def chat():
 
             return jsonify(response)
 
-        # ===== STEP 3: Import matcher for FAQ matching =====
-        from nlp.matcher import matcher
-
-        # Find best match using advanced NLP
+        # ===== STEP 3: Find best match using advanced NLP =====
         best_match = matcher.find_best_match(question)
 
         # Prepare base response
@@ -207,15 +207,31 @@ def chat():
             'match_type': 'error'
         }), 500
 
+
 @chat_bp.route('/chat/history/<session_id>', methods=['GET'])
 def get_history(session_id):
     """Get chat history for a session"""
     try:
         conn = get_db_connection()
-        history = conn.execute(
-            "SELECT * FROM chat_history WHERE session_id = ? ORDER BY timestamp DESC LIMIT 50",
-            (session_id,)
-        ).fetchall()
+
+        if IN_PRODUCTION:
+            # PostgreSQL version
+            from psycopg2.extras import RealDictCursor
+            cur = conn.cursor(cursor_factory=RealDictCursor)
+            cur.execute(
+                "SELECT * FROM chat_history WHERE session_id = %s ORDER BY timestamp DESC LIMIT 50",
+                (session_id,)
+            )
+            history = cur.fetchall()
+        else:
+            # SQLite version
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT * FROM chat_history WHERE session_id = ? ORDER BY timestamp DESC LIMIT 50",
+                (session_id,)
+            )
+            history = cur.fetchall()
+
         conn.close()
 
         return jsonify({
@@ -234,25 +250,58 @@ def get_suggestions():
     try:
         conn = get_db_connection()
 
-        # Get most frequently asked questions from chat history
-        suggestions = conn.execute("""
-            SELECT user_message, COUNT(*) as count 
-            FROM chat_history 
-            GROUP BY user_message 
-            ORDER BY count DESC 
-            LIMIT 6
-        """).fetchall()
+        if IN_PRODUCTION:
+            # PostgreSQL version
+            from psycopg2.extras import RealDictCursor
+            cur = conn.cursor(cursor_factory=RealDictCursor)
 
-        # If not enough history, return some default FAQs
-        if len(suggestions) < 6:
-            faqs = conn.execute(
-                "SELECT question FROM faqs ORDER BY RANDOM() LIMIT ?",
-                (6 - len(suggestions),)
-            ).fetchall()
+            # Get most frequently asked questions
+            cur.execute("""
+                SELECT user_message, COUNT(*) as count 
+                FROM chat_history 
+                GROUP BY user_message 
+                ORDER BY count DESC 
+                LIMIT 6
+            """)
+            suggestions = cur.fetchall()
 
-            all_suggestions = [s['user_message'] for s in suggestions] + [f['question'] for f in faqs]
+            # If not enough history, get random FAQs
+            if len(suggestions) < 6:
+                cur.execute(
+                    "SELECT question FROM faqs ORDER BY RANDOM() LIMIT %s",
+                    (6 - len(suggestions),)
+                )
+                faqs = cur.fetchall()
+
+                all_suggestions = [s['user_message'] for s in suggestions] + [f['question'] for f in faqs]
+            else:
+                all_suggestions = [s['user_message'] for s in suggestions]
+
         else:
-            all_suggestions = [s['user_message'] for s in suggestions]
+            # SQLite version
+            cur = conn.cursor()
+
+            # Get most frequently asked questions
+            cur.execute("""
+                SELECT user_message, COUNT(*) as count 
+                FROM chat_history 
+                GROUP BY user_message 
+                ORDER BY count DESC 
+                LIMIT 6
+            """)
+            suggestions = cur.fetchall()
+
+            # If not enough history, get random FAQs
+            if len(suggestions) < 6:
+                cur.execute(
+                    "SELECT question FROM faqs ORDER BY RANDOM() LIMIT ?",
+                    (6 - len(suggestions),)
+                )
+                faqs = cur.fetchall()
+
+                all_suggestions = [s[0] for s in suggestions] + [f[0] for f in faqs]
+            else:
+                all_suggestions = [s[0] for s in suggestions]
 
         conn.close()
 

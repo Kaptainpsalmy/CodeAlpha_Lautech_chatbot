@@ -1,105 +1,282 @@
-from datetime import datetime
-from .config import get_db_connection
+"""
+Database configuration - automatically switches between SQLite and PostgreSQL
+"""
+
+import os
+import sys
+
+# Check if we're in production (Vercel)
+IN_PRODUCTION = os.environ.get('VERCEL_ENV') is not None
+
+if IN_PRODUCTION:
+    # Use production database (PostgreSQL)
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+
+    DATABASE_URL = os.environ.get('DATABASE_URL')
 
 
-class FAQ:
-    """FAQ Model Class"""
+    def get_db_connection():
+        """Create and return a PostgreSQL database connection"""
+        if not DATABASE_URL:
+            raise Exception("DATABASE_URL environment variable not set")
 
-    def __init__(self, id=None, question=None, answer=None, category=None, created_at=None, updated_at=None):
-        self.id = id
-        self.question = question
-        self.answer = answer
-        self.category = category
-        self.created_at = created_at or datetime.now()
-        self.updated_at = updated_at or datetime.now()
+        conn = psycopg2.connect(DATABASE_URL)
+        return conn
 
-    @staticmethod
-    def get_by_id(faq_id):
-        """Get FAQ by ID"""
+
+    def execute_query(conn, query, params=None):
+        """Execute a query and return results with RealDictCursor"""
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        if params:
+            cur.execute(query, params)
+        else:
+            cur.execute(query)
+
+        # For SELECT queries, return results
+        if query.strip().upper().startswith('SELECT'):
+            return cur.fetchall()
+        else:
+            # For INSERT/UPDATE/DELETE, commit and return None
+            conn.commit()
+            return None
+
+
+    def execute_query_one(conn, query, params=None):
+        """Execute a query and return a single row"""
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        if params:
+            cur.execute(query, params)
+        else:
+            cur.execute(query)
+        return cur.fetchone()
+
+
+    def init_database():
+        """Initialize PostgreSQL database and create tables"""
         conn = get_db_connection()
-        faq = conn.execute("SELECT * FROM faqs WHERE id = ?", (faq_id,)).fetchone()
+        cur = conn.cursor()
+
+        # Create FAQs table
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS faqs (
+                id SERIAL PRIMARY KEY,
+                question TEXT NOT NULL,
+                answer TEXT NOT NULL,
+                category TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        # Create unknown questions table
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS unknown_questions (
+                id SERIAL PRIMARY KEY,
+                question TEXT NOT NULL,
+                asked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                answered BOOLEAN DEFAULT FALSE,
+                session_id TEXT
+            )
+        ''')
+
+        # Create chat history table
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS chat_history (
+                id SERIAL PRIMARY KEY,
+                session_id TEXT NOT NULL,
+                user_message TEXT NOT NULL,
+                bot_response TEXT NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        conn.commit()
         conn.close()
-        return dict(faq) if faq else None
+        print("✅ PostgreSQL database initialized")
 
-    @staticmethod
-    def search_by_question(query):
-        """Search FAQs by question (for matching)"""
+else:
+    # Use development SQLite
+    import sqlite3
+    import os
+
+    DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'lautech.db')
+
+
+    def get_db_connection():
+        """Create and return a SQLite database connection"""
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+
+    def execute_query(conn, query, params=None):
+        """Execute a query and return results for SQLite"""
+        if params:
+            return conn.execute(query, params).fetchall()
+        else:
+            return conn.execute(query).fetchall()
+
+
+    def execute_query_one(conn, query, params=None):
+        """Execute a query and return a single row for SQLite"""
+        if params:
+            return conn.execute(query, params).fetchone()
+        else:
+            return conn.execute(query).fetchone()
+
+
+    def init_database():
+        """Initialize SQLite database and create tables"""
         conn = get_db_connection()
-        faqs = conn.execute(
-            "SELECT * FROM faqs WHERE question LIKE ? ORDER BY id",
-            (f'%{query}%',)
-        ).fetchall()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS faqs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                question TEXT NOT NULL,
+                answer TEXT NOT NULL,
+                category TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS unknown_questions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                question TEXT NOT NULL,
+                asked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                answered BOOLEAN DEFAULT 0,
+                session_id TEXT
+            )
+        ''')
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS chat_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id TEXT NOT NULL,
+                user_message TEXT NOT NULL,
+                bot_response TEXT NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        conn.commit()
         conn.close()
-        return [dict(faq) for faq in faqs]
+        print("✅ SQLite database initialized")
 
-    @staticmethod
-    def update_answer(faq_id, new_answer):
-        """Update FAQ answer"""
-        conn = get_db_connection()
-        conn.execute(
-            "UPDATE faqs SET answer = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-            (new_answer, faq_id)
+# Initialize database on module import
+init_database()
+
+
+# Common functions that work with both databases
+def add_faq(question, answer, category=None):
+    """Add a new FAQ to the database"""
+    conn = get_db_connection()
+
+    if IN_PRODUCTION:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO faqs (question, answer, category) VALUES (%s, %s, %s) RETURNING id",
+            (question, answer, category)
         )
+        faq_id = cur.fetchone()[0]
         conn.commit()
-        conn.close()
-
-    @staticmethod
-    def delete(faq_id):
-        """Delete FAQ by ID"""
-        conn = get_db_connection()
-        conn.execute("DELETE FROM faqs WHERE id = ?", (faq_id,))
-        conn.commit()
-        conn.close()
-
-
-class UnknownQuestion:
-    """Unknown Question Model Class"""
-
-    def __init__(self, id=None, question=None, asked_at=None, answered=False, session_id=None):
-        self.id = id
-        self.question = question
-        self.asked_at = asked_at or datetime.now()
-        self.answered = answered
-        self.session_id = session_id
-
-    @staticmethod
-    def mark_as_answered(question_id):
-        """Mark unknown question as answered"""
-        conn = get_db_connection()
-        conn.execute(
-            "UPDATE unknown_questions SET answered = 1 WHERE id = ?",
-            (question_id,)
+    else:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO faqs (question, answer, category) VALUES (?, ?)",
+            (question, answer, category)
         )
+        faq_id = cur.lastrowid
         conn.commit()
-        conn.close()
 
-    @staticmethod
-    def get_unanswered_count():
-        """Get count of unanswered questions"""
-        conn = get_db_connection()
-        count = conn.execute("SELECT COUNT(*) as count FROM unknown_questions WHERE answered = 0").fetchone()
-        conn.close()
-        return count['count']
+    conn.close()
+    return faq_id
 
 
-class ChatHistory:
-    """Chat History Model Class"""
+def get_all_faqs():
+    """Retrieve all FAQs from database"""
+    conn = get_db_connection()
 
-    @staticmethod
-    def get_session_history(session_id, limit=50):
-        """Get chat history for a session"""
-        conn = get_db_connection()
-        history = conn.execute(
-            "SELECT * FROM chat_history WHERE session_id = ? ORDER BY timestamp DESC LIMIT ?",
-            (session_id, limit)
-        ).fetchall()
-        conn.close()
-        return [dict(h) for h in history]
+    if IN_PRODUCTION:
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute("SELECT * FROM faqs ORDER BY id")
+        faqs = cur.fetchall()
+    else:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM faqs ORDER BY id")
+        faqs = cur.fetchall()
 
-    @staticmethod
-    def clear_session(session_id):
-        """Clear chat history for a session"""
-        conn = get_db_connection()
-        conn.execute("DELETE FROM chat_history WHERE session_id = ?", (session_id,))
+    conn.close()
+    return [dict(faq) for faq in faqs]
+
+
+def add_unknown_question(question, session_id=None):
+    """Log an unknown question"""
+    conn = get_db_connection()
+
+    if IN_PRODUCTION:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO unknown_questions (question, session_id) VALUES (%s, %s) RETURNING id",
+            (question, session_id)
+        )
+        question_id = cur.fetchone()[0]
         conn.commit()
-        conn.close()
+    else:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO unknown_questions (question, session_id) VALUES (?, ?)",
+            (question, session_id)
+        )
+        question_id = cur.lastrowid
+        conn.commit()
+
+    conn.close()
+    return question_id
+
+
+def get_unknown_questions(answered=False):
+    """Get all unknown questions"""
+    conn = get_db_connection()
+
+    if IN_PRODUCTION:
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute(
+            "SELECT * FROM unknown_questions WHERE answered = %s ORDER BY asked_at DESC",
+            (answered,)
+        )
+        questions = cur.fetchall()
+    else:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT * FROM unknown_questions WHERE answered = ? ORDER BY asked_at DESC",
+            (1 if answered else 0,)
+        )
+        questions = cur.fetchall()
+
+    conn.close()
+    return [dict(q) for q in questions]
+
+
+def add_chat_history(session_id, user_message, bot_response):
+    """Save chat history"""
+    conn = get_db_connection()
+
+    if IN_PRODUCTION:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO chat_history (session_id, user_message, bot_response) VALUES (%s, %s, %s)",
+            (session_id, user_message, bot_response)
+        )
+    else:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO chat_history (session_id, user_message, bot_response) VALUES (?, ?, ?)",
+            (session_id, user_message, bot_response)
+        )
+
+    conn.commit()
+    conn.close()
