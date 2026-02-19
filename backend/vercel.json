@@ -1,25 +1,26 @@
-{
-  "functions": {
-    "api/index.py": {
-      "runtime": "python3.9",
-      "maxDuration": 10
-    }
-  },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index.py" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
-    }
-  ],
-  "env": {
-    "DATABASE_URL": "@lautech_db_url",
-    "SECRET_KEY": "@lautech_secret_key"
+  {
+    "functions": {
+      "api/index.py": {
+        "runtime": "python3.9",
+        "maxDuration": 10
+      }
+    },
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/api/index.py" }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "Access-Control-Allow-Origin", "value": "*" },
+          { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS" },
+          { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+        ]
+      }
+    ],
+      "env": {
+    "DATABASE_URL": "",
+    "SECRET_KEY": "",
+    "PYTHON_VERSION": "3.9"
   }
-}
+  }
