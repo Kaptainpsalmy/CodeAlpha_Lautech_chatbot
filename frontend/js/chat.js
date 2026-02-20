@@ -1,5 +1,4 @@
 // ===== LAUTECH CHATBOT - MAIN CHAT FUNCTIONALITY =====
-// Auto-scroll that works perfectly - NO MANUAL SCROLLING NEEDED
 
 class LautechChatbot {
     constructor() {
@@ -8,7 +7,7 @@ class LautechChatbot {
         this.isTyping = false;
         this.apiUrl = 'https://code-alpha-lautech-chatbot-79rn.vercel.app/api';
         this.isUserScrolled = false;
-        this.autoScrollEnabled = true; // Always enabled by default
+        this.autoScrollEnabled = true;
 
         // DOM Elements
         this.chatMessages = document.getElementById('chatMessages');
@@ -36,7 +35,7 @@ class LautechChatbot {
 
         this.checkBackendHealth();
 
-        // Always scroll to bottom on init (after loading history)
+        // Always scroll to bottom on init
         setTimeout(() => this.instantScrollToBottom(), 100);
     }
 
@@ -99,22 +98,19 @@ class LautechChatbot {
             this.welcomeSection.classList.add('hidden');
         }
 
-        // Add user message to UI and force scroll
+        // Add user message to UI
         this.addMessage(messageText, 'user');
         this.instantScrollToBottom();
 
-        // Show typing indicator and scroll to it
+        // Show typing indicator
         this.showTypingIndicator();
         this.instantScrollToBottom();
 
         try {
-            // Send to backend and get response
             const response = await this.getBotResponse(messageText);
 
-            // Hide typing indicator
             this.hideTypingIndicator();
 
-            // Add bot response to UI and force scroll
             this.addMessage(
                 response.answer,
                 'ai',
@@ -123,15 +119,12 @@ class LautechChatbot {
                 response.suggestions
             );
 
-            // CRITICAL: Force scroll to bottom after adding message
+            // Force scroll multiple times
             this.instantScrollToBottom();
-
-            // Double-check scroll after a tiny delay (for any rendering lag)
             setTimeout(() => this.instantScrollToBottom(), 10);
             setTimeout(() => this.instantScrollToBottom(), 50);
             setTimeout(() => this.instantScrollToBottom(), 100);
 
-            // Save to storage
             this.saveMessages();
 
         } catch (error) {
@@ -148,7 +141,6 @@ class LautechChatbot {
             );
 
             this.instantScrollToBottom();
-
             utils.showToast('Connection error. Make sure backend is running', 'error');
         }
     }
@@ -302,7 +294,6 @@ class LautechChatbot {
             });
         });
 
-        // Store message
         this.messages.push({
             text,
             sender,
@@ -324,42 +315,25 @@ class LautechChatbot {
         this.typingIndicator.classList.remove('active');
     }
 
-    // ===== CRITICAL: PERFECT AUTO-SCROLL METHOD =====
-// Replace your existing method in chat.js
-instantScrollToBottom() {
-    requestAnimationFrame(() => {
-        const lastMessage = this.chatMessages.lastElementChild;
-        if (lastMessage) {
-            lastMessage.scrollIntoView({ behavior: 'auto', block: 'end' });
-        } else {
-            this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-        }
-    });
-}
-    // ===== STORAGE METHODS =====
+    // ===== AUTO-SCROLL METHOD =====
+    instantScrollToBottom() {
+        requestAnimationFrame(() => {
+            const lastMessage = this.chatMessages.lastElementChild;
+            if (lastMessage) {
+                lastMessage.scrollIntoView({ behavior: 'auto', block: 'end' });
+            } else {
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+        });
+    }
 
+    // ===== STORAGE METHODS =====
     saveMessages() {
         utils.saveChatToStorage(this.messages);
     }
 
-loadChatHistory() {
-    const savedMessages = utils.loadChatFromStorage();
-
-    if (savedMessages && savedMessages.length > 0) {
-        if (this.welcomeSection) {
-            this.welcomeSection.classList.add('hidden');
-        }
-
-        savedMessages.forEach(msg => {
-            this.addMessage(msg.text, msg.sender, msg.confidence, msg.matchType);
-        });
-
-        this.messages = savedMessages;
-
-        // Ensure we scroll to the very bottom after history loads
-        setTimeout(() => this.instantScrollToBottom(), 200);
-    }
-}        const savedMessages = utils.loadChatFromStorage();
+    loadChatHistory() {
+        const savedMessages = utils.loadChatFromStorage();
 
         if (savedMessages && savedMessages.length > 0) {
             if (this.welcomeSection) {
@@ -373,8 +347,7 @@ loadChatHistory() {
             this.messages = savedMessages;
 
             // Scroll to bottom after loading history
-            setTimeout(() => this.instantScrollToBottom(), 50);
-            setTimeout(() => this.instantScrollToBottom(), 100);
+            setTimeout(() => this.instantScrollToBottom(), 200);
         }
     }
 
