@@ -1,10 +1,31 @@
-# Ignore development files
+# Python
 __pycache__
 *.pyc
 venv
+env
 .env
-.git
-README.md
+.python-version
+
+# Database
+*.db
+*.db-journal
 data/*.db
-frontend/test.html
-frontend/debug-scroll.html
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.backup
+
+# Tests (optional - include if you want them in deployment)
+**/test_*.py
+**/test_*.html
+debug-*.html

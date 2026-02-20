@@ -38,11 +38,15 @@ def create_app():
         }
 
     # Health check endpoint
-    @app.route('/api/health')
-    def health():
-        return {'status': 'healthy', 'timestamp': __import__('datetime').datetime.now().isoformat()}
-
-    return app
+    @app.route('/api/test')
+    def test():
+        from datetime import datetime
+        return jsonify({
+            'status': 'ok',
+            'message': 'API is working',
+            'timestamp': datetime.now().isoformat(),
+            'environment': os.environ.get('VERCEL_ENV', 'development')
+        })
 
 
 # Create app instance
