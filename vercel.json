@@ -3,10 +3,7 @@
   "builds": [
     {
       "src": "backend/api/vercel_handler.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
+      "use": "@vercel/python"
     },
     {
       "src": "frontend/**",
@@ -17,22 +14,6 @@
     {
       "src": "/api/(.*)",
       "dest": "backend/api/vercel_handler.py"
-    },
-    {
-      "src": "/admin.html",
-      "dest": "/frontend/admin.html"
-    },
-    {
-      "src": "/css/(.*)",
-      "dest": "/frontend/css/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/frontend/js/$1"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/frontend/assets/$1"
     },
     {
       "src": "/(.*)",
