@@ -2,54 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/api/vercel_handler.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb",
-        "runtime": "python3.9"
-      }
-    },
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
+      "src": "backend/api/simple_handler.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "backend/api/vercel_handler.py"
-    },
-    {
-      "src": "/admin.html",
-      "dest": "/frontend/admin.html"
-    },
-    {
-      "src": "/css/(.*)",
-      "dest": "/frontend/css/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/frontend/js/$1"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/frontend/assets/$1"
-    },
-    {
-      "src": "/test.html",
-      "dest": "/frontend/test.html"
-    },
-    {
-      "src": "/debug-scroll.html",
-      "dest": "/frontend/debug-scroll.html"
-    },
-    {
-      "src": "/test-checklist.html",
-      "dest": "/frontend/test-checklist.html"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/frontend/index.html"
+      "dest": "backend/api/simple_handler.py"
     }
   ]
 }
