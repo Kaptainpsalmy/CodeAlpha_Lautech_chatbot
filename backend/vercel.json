@@ -2,18 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "vercel_app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
+      "src": "api/vercel_handler.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "vercel_app.py"
+      "dest": "api/vercel_handler.py"
     }
-  ],
-  "buildCommand": "pip install -r requirements.txt && python nltk_setup.py"
+  ]
 }

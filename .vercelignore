@@ -1,0 +1,10 @@
+# Ignore development files
+__pycache__
+*.pyc
+venv
+.env
+.git
+README.md
+data/*.db
+frontend/test.html
+frontend/debug-scroll.html
