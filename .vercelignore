@@ -1,8 +1,7 @@
-# Python
+# Python cache
 __pycache__
 *.pyc
 venv
-env
 .env
 .python-version
 
@@ -13,7 +12,6 @@ data/*.db
 
 # Logs
 *.log
-npm-debug.log*
 
 # IDE
 .vscode
@@ -24,8 +22,3 @@ npm-debug.log*
 # Backup files
 *.bak
 *.backup
-
-# Tests (optional - include if you want them in deployment)
-**/test_*.py
-**/test_*.html
-debug-*.html
