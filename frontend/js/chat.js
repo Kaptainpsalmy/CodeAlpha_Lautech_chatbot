@@ -5,7 +5,7 @@ class LautechChatbot {
         this.messages = [];
         this.sessionId = utils.getSessionId();
         this.isTyping = false;
-        this.apiUrl = 'http://localhost:5000/api';
+        this.apiUrl = 'https://code-alpha-lautech-chatbot-79rn.vercel.app/api';
         this.isUserScrolled = false; // Track if user manually scrolled
 
         // DOM Elements
