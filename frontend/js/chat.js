@@ -325,27 +325,41 @@ class LautechChatbot {
     }
 
     // ===== CRITICAL: PERFECT AUTO-SCROLL METHOD =====
-    instantScrollToBottom() {
-        // Use requestAnimationFrame for perfect timing with DOM updates
-        requestAnimationFrame(() => {
-            // Direct scrollTop assignment - most reliable method
+// Replace your existing method in chat.js
+instantScrollToBottom() {
+    requestAnimationFrame(() => {
+        const lastMessage = this.chatMessages.lastElementChild;
+        if (lastMessage) {
+            lastMessage.scrollIntoView({ behavior: 'auto', block: 'end' });
+        } else {
             this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-
-            // Double-check after a tiny delay (for any async rendering)
-            setTimeout(() => {
-                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-            }, 5);
-        });
-    }
-
+        }
+    });
+}
     // ===== STORAGE METHODS =====
 
     saveMessages() {
         utils.saveChatToStorage(this.messages);
     }
 
-    loadChatHistory() {
-        const savedMessages = utils.loadChatFromStorage();
+loadChatHistory() {
+    const savedMessages = utils.loadChatFromStorage();
+
+    if (savedMessages && savedMessages.length > 0) {
+        if (this.welcomeSection) {
+            this.welcomeSection.classList.add('hidden');
+        }
+
+        savedMessages.forEach(msg => {
+            this.addMessage(msg.text, msg.sender, msg.confidence, msg.matchType);
+        });
+
+        this.messages = savedMessages;
+
+        // Ensure we scroll to the very bottom after history loads
+        setTimeout(() => this.instantScrollToBottom(), 200);
+    }
+}        const savedMessages = utils.loadChatFromStorage();
 
         if (savedMessages && savedMessages.length > 0) {
             if (this.welcomeSection) {

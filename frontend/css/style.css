@@ -180,14 +180,14 @@ body {
 }
 
 /* ===== MAIN CHAT AREA - ChatGPT Style ===== */
+/* Change this in style.css */
 .chat-main {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 16px 12px;
     background-color: #121212;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 768px) {
