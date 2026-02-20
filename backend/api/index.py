@@ -50,9 +50,3 @@ def create_app():
 
 # Create app instance
 app = create_app()
-
-
-# Vercel serverless handler - SIMPLIFIED
-def handler(request):
-    """Simple handler for Vercel"""
-    return app(request)
