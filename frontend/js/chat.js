@@ -1,4 +1,5 @@
 // ===== LAUTECH CHATBOT - MAIN CHAT FUNCTIONALITY =====
+// Auto-scroll that works perfectly - NO MANUAL SCROLLING NEEDED
 
 class LautechChatbot {
     constructor() {
@@ -6,7 +7,8 @@ class LautechChatbot {
         this.sessionId = utils.getSessionId();
         this.isTyping = false;
         this.apiUrl = 'https://code-alpha-lautech-chatbot-79rn.vercel.app/api';
-        this.isUserScrolled = false; // Track if user manually scrolled
+        this.isUserScrolled = false;
+        this.autoScrollEnabled = true; // Always enabled by default
 
         // DOM Elements
         this.chatMessages = document.getElementById('chatMessages');
@@ -28,24 +30,14 @@ class LautechChatbot {
         this.adjustTextareaHeight();
         this.loadSuggestions();
 
-        // Focus input on desktop
         if (!utils.isMobileDevice()) {
             this.userInput.focus();
         }
 
-        // Check if backend is reachable
         this.checkBackendHealth();
 
-        // Set up scroll detection
-        this.setupScrollDetection();
-    }
-
-    setupScrollDetection() {
-        this.chatMessages.addEventListener('scroll', () => {
-            const { scrollTop, scrollHeight, clientHeight } = this.chatMessages;
-            const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
-            this.isUserScrolled = !isAtBottom;
-        });
+        // Always scroll to bottom on init (after loading history)
+        setTimeout(() => this.instantScrollToBottom(), 100);
     }
 
     async checkBackendHealth() {
@@ -53,22 +45,15 @@ class LautechChatbot {
             const response = await fetch(`${this.apiUrl}/health`);
             if (response.ok) {
                 console.log('✅ Backend connection successful');
-                utils.showToast('Connected to server', 'success');
-            } else {
-                console.warn('⚠️ Backend returned error');
-                utils.showToast('Server connection issue', 'error');
             }
         } catch (error) {
             console.error('❌ Cannot connect to backend:', error);
-            utils.showToast('Cannot connect to server. Make sure backend is running on port 5000', 'error');
         }
     }
 
     setupEventListeners() {
-        // Send message on button click
         this.sendButton.addEventListener('click', () => this.sendMessage());
 
-        // Send message on Enter (but Shift+Enter for new line)
         this.userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -76,18 +61,15 @@ class LautechChatbot {
             }
         });
 
-        // Adjust textarea height as user types
         this.userInput.addEventListener('input', () => {
             this.adjustTextareaHeight();
             this.toggleSendButton();
         });
 
-        // Clear chat button
         if (this.clearChatBtn) {
             this.clearChatBtn.addEventListener('click', () => this.clearChat());
         }
 
-        // Theme toggle
         if (this.themeToggle) {
             this.themeToggle.addEventListener('click', () => this.toggleTheme());
         }
@@ -117,14 +99,13 @@ class LautechChatbot {
             this.welcomeSection.classList.add('hidden');
         }
 
-        // Add user message to UI
+        // Add user message to UI and force scroll
         this.addMessage(messageText, 'user');
+        this.instantScrollToBottom();
 
-        // Force scroll to bottom for user message
-        this.forceScrollToBottom();
-
-        // Show typing indicator
+        // Show typing indicator and scroll to it
         this.showTypingIndicator();
+        this.instantScrollToBottom();
 
         try {
             // Send to backend and get response
@@ -133,7 +114,7 @@ class LautechChatbot {
             // Hide typing indicator
             this.hideTypingIndicator();
 
-            // Add bot response to UI
+            // Add bot response to UI and force scroll
             this.addMessage(
                 response.answer,
                 'ai',
@@ -142,6 +123,14 @@ class LautechChatbot {
                 response.suggestions
             );
 
+            // CRITICAL: Force scroll to bottom after adding message
+            this.instantScrollToBottom();
+
+            // Double-check scroll after a tiny delay (for any rendering lag)
+            setTimeout(() => this.instantScrollToBottom(), 10);
+            setTimeout(() => this.instantScrollToBottom(), 50);
+            setTimeout(() => this.instantScrollToBottom(), 100);
+
             // Save to storage
             this.saveMessages();
 
@@ -149,7 +138,6 @@ class LautechChatbot {
             console.error('Error getting response:', error);
             this.hideTypingIndicator();
 
-            // Show error message
             this.addMessage(
                 "I'm having trouble connecting right now. Please check if the backend server is running.",
                 'ai',
@@ -159,7 +147,9 @@ class LautechChatbot {
                 true
             );
 
-            utils.showToast('Connection error. Make sure backend is running on port 5000', 'error');
+            this.instantScrollToBottom();
+
+            utils.showToast('Connection error. Make sure backend is running', 'error');
         }
     }
 
@@ -192,19 +182,14 @@ class LautechChatbot {
 
     async loadSuggestions() {
         try {
-            console.log('Loading suggestions from API...');
             const response = await fetch(`${this.apiUrl}/chat/suggestions`);
-
             if (response.ok) {
                 const data = await response.json();
-                console.log('Suggestions received:', data);
                 this.updateSuggestedQuestions(data.suggestions);
             } else {
-                console.warn('Failed to load suggestions, using fallback');
                 this.useFallbackSuggestions();
             }
         } catch (error) {
-            console.log('Could not load suggestions, using fallback:', error);
             this.useFallbackSuggestions();
         }
     }
@@ -225,10 +210,7 @@ class LautechChatbot {
         const chipsContainer = document.getElementById('questionChips') ||
                               document.querySelector('.question-chips');
 
-        if (!chipsContainer) {
-            console.error('Could not find chips container!');
-            return;
-        }
+        if (!chipsContainer) return;
 
         chipsContainer.innerHTML = '';
 
@@ -239,15 +221,9 @@ class LautechChatbot {
             chip.addEventListener('click', () => {
                 this.userInput.value = question;
                 this.sendMessage();
-
-                if (this.welcomeSection && !this.welcomeSection.classList.contains('hidden')) {
-                    this.welcomeSection.classList.add('hidden');
-                }
             });
             chipsContainer.appendChild(chip);
         });
-
-        console.log(`Added ${suggestions.length} suggestion chips`);
     }
 
     addMessage(text, sender, confidence = null, matchType = null, suggestions = null, isError = false) {
@@ -326,9 +302,6 @@ class LautechChatbot {
             });
         });
 
-        // Scroll to show new message
-        this.smartScrollToBottom();
-
         // Store message
         this.messages.push({
             text,
@@ -337,12 +310,13 @@ class LautechChatbot {
             confidence,
             matchType
         });
+
+        return messageDiv;
     }
 
     showTypingIndicator() {
         this.isTyping = true;
         this.typingIndicator.classList.add('active');
-        this.smartScrollToBottom();
     }
 
     hideTypingIndicator() {
@@ -350,32 +324,17 @@ class LautechChatbot {
         this.typingIndicator.classList.remove('active');
     }
 
-    // ===== SCROLLING METHODS =====
-
-    smartScrollToBottom() {
-        // Only auto-scroll if user hasn't manually scrolled up
-        if (!this.isUserScrolled) {
-            this.forceScrollToBottom();
-        }
-    }
-
-    forceScrollToBottom() {
+    // ===== CRITICAL: PERFECT AUTO-SCROLL METHOD =====
+    instantScrollToBottom() {
+        // Use requestAnimationFrame for perfect timing with DOM updates
         requestAnimationFrame(() => {
-            // Immediate scroll
+            // Direct scrollTop assignment - most reliable method
             this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
 
-            // Smooth scroll after a tiny delay (for better UX)
-            setTimeout(() => {
-                this.chatMessages.scrollTo({
-                    top: this.chatMessages.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 50);
-
-            // Final check after any images/content load
+            // Double-check after a tiny delay (for any async rendering)
             setTimeout(() => {
                 this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-            }, 200);
+            }, 5);
         });
     }
 
@@ -400,7 +359,8 @@ class LautechChatbot {
             this.messages = savedMessages;
 
             // Scroll to bottom after loading history
-            setTimeout(() => this.forceScrollToBottom(), 100);
+            setTimeout(() => this.instantScrollToBottom(), 50);
+            setTimeout(() => this.instantScrollToBottom(), 100);
         }
     }
 
