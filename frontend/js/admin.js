@@ -2,7 +2,7 @@
 
 class AdminDashboard {
     constructor() {
-        this.apiUrl = 'http://localhost:5000/api/admin';
+        this.apiUrl = 'https://code-alpha-lautech-chatbot-79rn.vercel.app/api/admin';
         this.token = localStorage.getItem('admin_token');
         this.currentTab = 'overview';
 
