@@ -18,16 +18,13 @@ print(f"Files in directory: {os.listdir('.')}")
 try:
     # Import the Flask app
     from api import app
-
     print("✅ Flask app imported successfully")
 except Exception as e:
     print(f"❌ Error importing app: {e}")
     traceback.print_exc()
     # Create a fallback app
     from flask import Flask, jsonify
-
     app = Flask(__name__)
-
 
     @app.route('/')
     def home():
@@ -37,10 +34,13 @@ except Exception as e:
             'fix': 'Check the logs'
         })
 
-
     @app.route('/api/health')
     def health():
         return jsonify({'status': 'degraded', 'error': str(e)})
+
+    @app.route('/api/test')
+    def test():
+        return jsonify({'message': 'Test endpoint working'})
 
 # Vercel requires a variable named 'handler'
 handler = app
